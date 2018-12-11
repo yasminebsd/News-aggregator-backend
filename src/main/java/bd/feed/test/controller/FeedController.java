@@ -22,6 +22,7 @@ public class FeedController {
 
     @PostMapping
     public List<Feed> feedRead(@RequestBody String filtre){
+        System.out.println(filtre);
         return feedService.getFeedsByKeyword(filtre);  }
 
     @PostMapping("/jsoup")

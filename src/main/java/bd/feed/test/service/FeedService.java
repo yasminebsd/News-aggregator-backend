@@ -1,6 +1,7 @@
 package bd.feed.test.service;
 
 import bd.feed.test.model.Feed;
+import twitter4j.Status;
 import twitter4j.TwitterException;
 
 import java.io.IOException;

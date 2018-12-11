@@ -25,9 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
-import twitter4j.Status;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
+import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
 
 @Service
@@ -150,11 +148,26 @@ public class FeedServiceImpl implements FeedService {
         TwitterFactory tf = new TwitterFactory(cb.build());
         twitter4j.Twitter twitter = tf.getInstance();
 
-        List<Status> status = twitter.getHomeTimeline();
+        /*List<Status> status = twitter.getHomeTimeline();*/
 
-        for (Status st : status) {
+        Query query = new Query("#"+searchTerm);
+        QueryResult result = twitter.search(query);
 
-            String[] tab = st.getText().split(" ");
+        /*for (Status st : status) */
+        for(Status status: result.getTweets()){
+                String language = status.getLang();
+
+                if(language.compareTo("en") == 0){
+                    Feed f = new Feed();
+                    f.setTitle(status.getText());
+                    f.setDescription(status.getLang());
+                    f.setImage_src("http://www.imt-atlantique.fr/lexians/wp-content/uploads/2016/05/twitter.jpg");
+                    f.setLink("https://twitter.com/" + status.getUser().getScreenName()
+                            + "/status/" + status.getId());
+                    System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
+                    feedList.add(f);
+
+            /*String[] tab = st.getText().split(" ");
 
             for (int j = 0; j < tab.length; j++) {
                 System.out.print(tab[j]);
@@ -171,7 +184,8 @@ public class FeedServiceImpl implements FeedService {
                             + "/status/" + st.getId();
                     System.out.println(url);
                 }
-            }
+            }*/
+                }
         }
         return feedList;
     }
